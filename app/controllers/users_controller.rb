@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_one_month, only: :show
 
 
   def index
@@ -11,6 +12,8 @@ class UsersController < ApplicationController
 
   def show
     # @user = User.find(params[:id])
+    # 1ヶ月分の勤怠データの中で、出勤時間が何も無い状態では無いものの数を代入
+    @worked_sum = @attendances.where.not(started_at: nil).count
   end
 
   def new
@@ -67,16 +70,15 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
     end
 
+    def basic_info_params
+      params.require(:user).permit(:department, :basic_time, :work_time)
+    end
 
      # beforeフィルター
 
      # paramsハッシュからユーザーを取得します。
     def set_user
       @user = User.find(params[:id])
-    end
-
-    def basic_info_params
-      params.require(:user).permit(:department, :basic_time, :work_time)
     end
 
     # ログイン済みのユーザーか確認します。
