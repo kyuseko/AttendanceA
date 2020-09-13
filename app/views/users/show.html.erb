@@ -3,10 +3,10 @@
   <table class="table table-bordered table-condensed user-table">
     <tr>
       <td>
-        <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-outline-dark" %>
+        <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
         <%= l(@first_day, format: :middle) %>
         時間管理表
-        <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-outline-dark" %>
+        <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
         </td>
       <td>指定勤務開始時間 <%= format_basic_info(@user.work_time) %> <br> 指定勤務終了時間<br></td>
       <td colspan="3">基本時間 <%= format_basic_info(@user.basic_time) %></td>
@@ -25,8 +25,7 @@
 </div>
 
 <div class="btn-users-show">
-  <!-- <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %> -->
-  <%= link_to "次月へ ⇨", user_path(date: @first_day.next_month), class: "btn btn-info" %>
+  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
 </div>
 
 <div>
@@ -36,8 +35,9 @@
         <th>日付</th>
         <th>曜日</th>
         <th>勤怠登録</th>
-        <th>出勤時間</th>
-        <th>退勤時間</th>
+        <th>出勤</th>
+        <th>退勤</th>
+        <th>翌日</th>
         <th>在社時間</th>
         <th>備考</th>
       </tr>
@@ -55,13 +55,14 @@
           </td>
           <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
           <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
+          <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
            </td>
-           <td></td>
+           <td><%= day.note %></td>
          </tr>
       <% end %>
     </tbody>
